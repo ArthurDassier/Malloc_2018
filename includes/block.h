@@ -2,9 +2,9 @@
 #define BLOCK_H
 #include <stdbool.h>
 // typedef struct s_block *block_t;
-// #define BLOCK_SIZE 12
+// #define BLOCK_SIZE 20
 //
-// #define align4(x) (((((x) -1) >>2) <<2)+4)// ATTENTION
+#define align4(x) (((((x) -1) >>2) <<2)+8)// ATTENTION
 // struct s_block {
 // 	size_t size;
 // 	block_t next;
@@ -12,14 +12,17 @@
 // 	char data[1];
 // };
 
+void *malloc(size_t size);
+
 
 typedef struct s_block block_t;
 
 struct s_block {
-	size_t size;
-	block_t *next;
-	bool is_occuped;
-	long long adresse[1];
+    size_t size;
+    block_t *next;
+    // block_t *prev;
+    int free;
+    char data[1];
 };
 
 #endif
