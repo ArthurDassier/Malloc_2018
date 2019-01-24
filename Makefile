@@ -35,6 +35,9 @@ UT_DIR	=	./tests
 LIB_DIR	=	./lib/my
 
 EXE	=	$(SRC_DIR)/main.c\
+		$(SRC_DIR)/alloc.c\
+		$(SRC_DIR)/algo.c\
+
 
 OBJ	=	$(EXE:.c=.o)
 
