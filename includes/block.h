@@ -10,6 +10,7 @@
 
 
 #define MAX_MALLOC 9223372036854775807
+#define align4(x) (((((x) -1) >>2) <<2)+4)
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -17,6 +18,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <pthread.h>
 
 typedef struct s_block block_t;
 
@@ -38,6 +40,8 @@ void show_alloc_mem();
 block_t * find_free_block(block_t *base, size_t const size);
 void *create_new_block(block_t *base, size_t const size);
 block_t *start_mem(size_t const size);
+block_t *split_block(block_t *to_split, size_t size);
+
 
 
 // extern block_t *base;

@@ -13,11 +13,13 @@ block_t* compare_ptr(void *ptr)
 {
     block_t *tmp = base;
 
+    // printf("%p\n", ptr);
     if (tmp == NULL)
         return (NULL);
     while (tmp) {
-        if (tmp->adresse == ptr)
+        if (tmp->adresse == ptr) {
             return (tmp);
+        }
         tmp = tmp->next;
     }
     return (tmp);
@@ -34,20 +36,25 @@ block_t *fusion(block_t *to_fusion)
             to_fusion->next->prev = to_fusion;
     }
     return (to_fusion);
+    // while (tmp) {
+    //
+    // }
+    // while (tmp->prev) {
+    //
+    // }
 }
 
-// 
+
 // int main()
 // {
-// //     char *toto = my_calloc(1, sizeof(char) * 3);
-// //     toto[0] = 'S';
-// //     toto[1] = 'a';
-// //     toto[2] = '\0';
-// //
-// //     printf("%s\n", toto);
-//     int *toto = my_malloc(-2);
-//     if (toto == NULL)
-//         printf("NULL");
-//     // toto[100] = 12;
+//     char *array = my_malloc(100);
+//     char *array2 = my_malloc(14);
+//     char *array3 = my_malloc(35);
+//     char *array4 = my_malloc(1);
+//
+//     // my_free(array);
+//     // char *tab = my_malloc(1);
 //     // show_alloc_mem();
+//     // array = my_realloc(array,2);
+//     show_alloc_mem();
 // }

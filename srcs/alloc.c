@@ -7,6 +7,7 @@
 
 #include "block.h"
 extern block_t *base;
+static pthread_mutex_t mutex_stock = PTHREAD_MUTEX_INITIALIZER;
 
 void free(void *ptr)
 {
@@ -15,11 +16,13 @@ void free(void *ptr)
         return;
     }
     block_t* to_free = compare_ptr(ptr);
-
     if (to_free != NULL) {
+        pthread_mutex_lock(&mutex_stock);
+
         to_free->free = true;
         if (to_free->prev != NULL && to_free->prev->free == true)
             to_free = fusion(to_free->prev);
+        pthread_mutex_unlock(&mutex_stock);
     }
 }
 
@@ -42,8 +45,9 @@ void *realloc(void *ptr, size_t size)
         return (NULL);
     }
     old = compare_ptr(ptr);
-    if (old == NULL)
+    if (old == NULL) {
         return (NULL);
+    }
     if (old->size > size)
         new_ptr = memcpy(new_ptr, old->adresse, size);
     else
@@ -66,20 +70,27 @@ void *calloc(size_t const nb, size_t const size)
 void *malloc(size_t size)
 {
     block_t *new_block = NULL;
+    size = align4(size);
 
     if (size > MAX_MALLOC)
         return (NULL);
+    pthread_mutex_lock(&mutex_stock);
     if (base == NULL) {
         base = start_mem(size);
         if (base == NULL)
             return (NULL);
+        pthread_mutex_unlock(&mutex_stock);
         return (base->adresse);
     }
     new_block = find_free_block(base, size);
-    if (new_block == NULL)
+    if (new_block == NULL) {
         new_block = create_new_block(base, size);
-    if (new_block == NULL)
+    }
+    if (new_block == NULL) {
+        pthread_mutex_unlock(&mutex_stock);
         return (NULL);
+    }
+    pthread_mutex_unlock(&mutex_stock);
     return (new_block->adresse);
 
 }

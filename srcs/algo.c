@@ -8,7 +8,23 @@
 #include "block.h"
 extern block_t *base;
 
-// block_t *base = NULL;
+block_t *split_block(block_t *to_split, size_t size)
+{
+    block_t *new = NULL;
+    void *new_ptr = to_split->adresse + size + sizeof(block_t);
+
+    new = to_split->adresse + size;
+    new->adresse = new_ptr;
+
+    new->prev = to_split;
+    new->next = to_split->next;
+
+    to_split->next = new;
+    new->size = to_split->size - size;
+
+    to_split->size = to_split->size - new->size - sizeof(block_t);
+    return (to_split);
+}
 
 void show_alloc_mem()
 {
@@ -24,8 +40,12 @@ void show_alloc_mem()
 
 block_t * find_free_block(block_t *base, size_t const size)
 {
-    while (base && !(base->free && base->size >= size))
+    while (base) {
+        if (base->free == true && base->size >= size) {
+            break;
+        }
         base = base->next;
+    }
     if (base)
         base->free = false;
     return (base);
