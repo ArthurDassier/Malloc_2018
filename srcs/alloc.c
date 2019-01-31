@@ -7,14 +7,12 @@
 
 #include "block.h"
 extern block_t *base;
-static pthread_mutex_t mutex_stock = PTHREAD_MUTEX_INITIALIZER;
+extern pthread_mutex_t mutex_stock;
 
-void free(void *ptr)
+void my_free(void *ptr)
 {
-    if (ptr == NULL) {
-        //INDIQUER UNE ERREUR
+    if (ptr == NULL)
         return;
-    }
     block_t* to_free = compare_ptr(ptr);
     if (to_free != NULL) {
         pthread_mutex_lock(&mutex_stock);
@@ -26,39 +24,29 @@ void free(void *ptr)
     }
 }
 
-void *realloc(void *ptr, size_t size)
+void *my_realloc(void *ptr, size_t size)
 {
     block_t *old = NULL;
     void    *new_ptr = NULL;
 
-    if (ptr == NULL) {
-        new_ptr = malloc(size);
-        return (new_ptr);
-    }
-    if (size == 0) {
-        free(ptr);
-        return (NULL);
-    }
-    new_ptr = malloc(size);
-    if (new_ptr == NULL) {
-        free(ptr);
-        return (NULL);
-    }
+    if (ptr == NULL)
+        return (my_malloc(size));
+    if (size == 0)
+        free_and_return_null(ptr);
+    new_ptr = my_malloc(size);
+    if (new_ptr == NULL)
+        return (free_and_return_null(ptr));
     old = compare_ptr(ptr);
-    if (old == NULL) {
+    if (old == NULL)
         return (NULL);
-    }
-    if (old->size > size)
-        new_ptr = memcpy(new_ptr, old->adresse, size);
-    else
-        new_ptr = memcpy(new_ptr, old->adresse, size);
-    free(ptr);
+    new_ptr = memcpy(new_ptr, old->adresse, size);
+    my_free(ptr);
     return (new_ptr);
 }
 
-void *calloc(size_t const nb, size_t const size)
+void *my_calloc(size_t const nb, size_t const size)
 {
-    char *new = malloc(size * nb);
+    char *new = my_malloc(size * nb);
 
     if (size == 0 || nb == 0 || new == NULL)
         return (NULL);
@@ -67,7 +55,7 @@ void *calloc(size_t const nb, size_t const size)
     return (new);
 }
 
-void *malloc(size_t size)
+void *my_malloc(size_t size)
 {
     block_t *new_block = NULL;
     size = align4(size);
@@ -79,18 +67,13 @@ void *malloc(size_t size)
         base = start_mem(size);
         if (base == NULL)
             return (NULL);
-        pthread_mutex_unlock(&mutex_stock);
-        return (base->adresse);
+        return (unlock_thread_and_return_ptr(base->adresse));
     }
     new_block = find_free_block(base, size);
-    if (new_block == NULL) {
+    if (new_block == NULL)
         new_block = create_new_block(base, size);
-    }
-    if (new_block == NULL) {
-        pthread_mutex_unlock(&mutex_stock);
-        return (NULL);
-    }
+    if (new_block == NULL)
+        return (unlock_thread_and_return_ptr(NULL));
     pthread_mutex_unlock(&mutex_stock);
     return (new_block->adresse);
-
 }

@@ -15,18 +15,15 @@ block_t *split_block(block_t *to_split, size_t size)
 
     new = to_split->adresse + size;
     new->adresse = new_ptr;
-
     new->prev = to_split;
     new->next = to_split->next;
-
     to_split->next = new;
     new->size = to_split->size - size;
-
     to_split->size = to_split->size - new->size - sizeof(block_t);
     return (to_split);
 }
 
-void show_alloc_mem()
+void show_alloc_mem(void)
 {
     block_t *tmp = base;
     printf("break : %p\n", sbrk(0));
@@ -38,7 +35,7 @@ void show_alloc_mem()
     }
 }
 
-block_t * find_free_block(block_t *base, size_t const size)
+block_t *find_free_block(block_t *base, size_t const size)
 {
     while (base) {
         if (base->free == true && base->size >= size) {
@@ -69,7 +66,7 @@ void *create_new_block(block_t *base, size_t const size)
 
 block_t *start_mem(size_t const size)
 {
-    block_t * new_mem;
+    block_t *new_mem;
     void *new_ptr = sbrk(sizeof(block_t) + size);
 
     if (new_ptr == (void *) -1)

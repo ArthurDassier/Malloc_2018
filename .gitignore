@@ -1,0 +1,5 @@
+a.out
+libmy_malloc.so
+*.gc*
+UT
+test
