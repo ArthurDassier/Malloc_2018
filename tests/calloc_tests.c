@@ -24,6 +24,14 @@ Test(tests_calloc, calloc_return_good_size)
     cr_assert_eq(the_cast->size, 20);
 }
 
+Test(tests_calloc, calloc_return_set_memory)
+{
+    char *test = my_calloc(2, 10);
+
+    for(size_t i = 0; i < 20; ++i)
+        cr_assert_eq(test[i], 0);
+}
+
 Test(tests_calloc, calloc_return_null)
 {
     cr_assert_null(my_calloc(1000, 999999999999999999));
