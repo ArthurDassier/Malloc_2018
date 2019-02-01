@@ -1,0 +1,30 @@
+langage: c
+compiler: gcc -std=c++11 -std=gnu++11
+
+addons:
+ sonarcloud: true
+
+before_install:
+  - sudo add-apt-repository ppa:snaipewastaken/ppa -y
+  - sudo apt-get update -y
+  - sudo apt-get install criterion-dev -y
+  - sudo apt-get install gcovr -y
+
+jobs:
+  include:
+    - stage: Unit Tests
+      script:
+        - make tests_run
+    - stage: Unit Tests & Sonar
+      if: (NOT type IN (pull_request)) AND (branch = master)
+      script:
+        - make tests_run
+        - gcovr -r . -x --object-directory=. > report.xml
+        - sonar-scanner -D sonar.host.url=$SONAR_HOST_URL -D sonar.login=$SONAR_TOKEN -X
+
+
+env:
+ global:
+ - secure: 6d76c467d3e0cfa3e8143937ddd342831969bc53
+
+ - SONAR_HOST_URL=http://91.121.150.220:9000
