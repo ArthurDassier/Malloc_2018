@@ -37,7 +37,7 @@ void *my_malloc(size_t size);
 
 void show_alloc_mem();
 block_t *find_free_block(block_t *base, size_t const size);
-void *create_new_block(block_t *base, size_t const size);
+void *create_new_block(size_t const size);
 block_t *start_mem(size_t const size);
 block_t *split_block(block_t *to_split, size_t size);
 

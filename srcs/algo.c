@@ -7,6 +7,7 @@
 
 #include "block.h"
 extern block_t *base;
+void *last_break = NULL;
 
 block_t *split_block(block_t *to_split, size_t size)
 {
@@ -48,29 +49,57 @@ block_t *find_free_block(block_t *base, size_t const size)
     return (base);
 }
 
-void *create_new_block(block_t *base, size_t const size)
+block_t *get_end()
 {
-    void *new_ptr = sbrk(sizeof(block_t) + size);
+    block_t *tmp = base;
 
-    if (new_ptr == (void *) -1)
-        return (NULL);
-    while (base->next)
-        base = base->next;
-    base->next = new_ptr;
-    base->next->free = false;
-    base->next->size = size;
-    base->next->next = NULL;
-    base->next->prev = base;
-    base->next->adresse = sizeof(block_t) + new_ptr;
+    for (; tmp->next; tmp = tmp->next);
+        return (tmp);
+    // if (base->prev == NULL)
+    //     return (base);
+    // return (base->prev);
+}
+
+void *create_new_block(size_t const size)
+{
+    block_t *end = get_end();
+    void *new_ptr;
+
+    if (last_break != sbrk(0)) {
+        new_ptr = sbrk(0);
+        if (sbrk(((sizeof(block_t) + size) / getpagesize() + 1) * getpagesize()) == (void *) -1)
+            return (NULL);
+        last_break = sbrk(0);
+        end->next = new_ptr;
+        end->next->free = false;
+        end->next->size = size;
+        end->next->next = NULL;
+        end->next->prev = end;
+        end->next->adresse = sizeof(block_t) + new_ptr + end->size;
+        return (end->next);
+    }
+    if (end->adresse + end->size + sizeof(block_t) + size >= sbrk(0)) {
+        if (sbrk(((sizeof(block_t) + size) / getpagesize() + 1) * getpagesize()) == (void *) -1)
+            return (NULL);
+        last_break = sbrk(0);
+    }
+    end->next = end->adresse + end->size;
+    end->next->free = false;
+    end->next->size = size;
+    end->next->next = NULL;
+    end->next->prev = end;
+    end->next->adresse = sizeof(block_t) + end->adresse + end->size;
+    return (end->next);
 }
 
 block_t *start_mem(size_t const size)
 {
     block_t *new_mem;
-    void *new_ptr = sbrk(sizeof(block_t) + size);
+    void *new_ptr = sbrk(((sizeof(block_t) + size) / getpagesize() + 1) * getpagesize());
 
     if (new_ptr == (void *) -1)
         return (NULL);
+    last_break = sbrk(0);
     new_mem = new_ptr;
     new_mem->size = size;
     new_mem->free = false;
