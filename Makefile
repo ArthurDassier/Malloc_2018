@@ -36,16 +36,18 @@ EXE	=	$(SRC_DIR)/main.c		\
 
 OBJ	=	$(EXE:.c=.o)
 
-UT 	= 	$(UT_DIR)/malloc_tests.c		\
-		$(UT_DIR)/realloc_tests.c		\
-		$(UT_DIR)/calloc_tests.c		\
-		$(UT_DIR)/start_mem_tests.c		\
+UT 	= 	$(UT_DIR)/malloc_tests.c			\
+		$(UT_DIR)/realloc_tests.c			\
+		$(UT_DIR)/calloc_tests.c			\
+		$(UT_DIR)/start_mem_tests.c			\
+		$(UT_DIR)/find_free_block_tests.c	\
 
-UT2	=	$(SRC_DIR)/main.c		\
-		$(SRC_DIR)/alloc.c		\
-		$(SRC_DIR)/algo.c		\
-		$(SRC_DIR)/tools.c		\
-		$(SRC_DIR)/getter.c		\
+UT2	=	$(SRC_DIR)/main.c	\
+		$(SRC_DIR)/alloc.c	\
+		$(SRC_DIR)/algo.c	\
+		$(SRC_DIR)/tools.c	\
+		$(SRC_DIR)/getter.c	\
+
 
 RM	=	rm -f
 

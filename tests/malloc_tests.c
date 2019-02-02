@@ -12,6 +12,8 @@
 Test(test_malloc, malloc_return_not_null)
 {
     cr_assert_not_null(my_malloc(1));
+    cr_assert_not_null(my_malloc(10));
+    cr_assert_not_null(my_malloc(100));
 }
 
 Test(test_malloc, malloc_return_good_size)

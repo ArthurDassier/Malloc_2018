@@ -49,7 +49,7 @@ struct s_block
     size_t  size;
     block_t *next;
     block_t *prev;
-    int     free;
+    bool     free;
     void    *adresse;
 };
 
