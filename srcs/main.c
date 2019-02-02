@@ -8,7 +8,6 @@
 #include "block.h"
 
 block_t *base = NULL;
-pthread_mutex_t mutex_stock = PTHREAD_MUTEX_INITIALIZER;
 
 block_t *fusion(block_t *to_fusion)
 {

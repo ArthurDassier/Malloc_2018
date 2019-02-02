@@ -28,6 +28,8 @@ block_t *fusion(block_t *to_fusion);
 void *free_and_return_null(void *ptr);
 void *unlock_thread_and_return_ptr(void *ptr);
 block_t *get_end();
+void* get_last_break(const size_t flag, void *value);
+void set_thread(int);
 
 void *my_realloc(void *ptr, size_t size);
 void my_free(void *ptr);

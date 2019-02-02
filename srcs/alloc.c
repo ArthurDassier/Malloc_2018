@@ -7,7 +7,6 @@
 
 #include "block.h"
 extern block_t *base;
-extern pthread_mutex_t mutex_stock;
 
 void my_free(void *ptr)
 {
@@ -57,7 +56,7 @@ void *my_malloc(size_t size)
 
     if (size > MAX_MALLOC)
         return (NULL);
-    pthread_mutex_lock(&mutex_stock);
+    set_thread(0);
     if (base == NULL) {
         base = start_mem(size);
         if (base == NULL)
@@ -69,6 +68,6 @@ void *my_malloc(size_t size)
         new_block = create_new_block(size);
     if (new_block == NULL)
         return (unlock_thread_and_return_ptr(NULL));
-    pthread_mutex_unlock(&mutex_stock);
+    set_thread(1);
     return (new_block->adresse);
 }

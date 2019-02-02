@@ -55,6 +55,6 @@ void *free_and_return_null(void *ptr)
 
 void *unlock_thread_and_return_ptr(void *ptr)
 {
-    pthread_mutex_unlock(&mutex_stock);
+    set_thread(1);
     return (ptr);
 }

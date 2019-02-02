@@ -7,7 +7,6 @@
 
 #include "block.h"
 extern block_t *base;
-void *last_break = NULL;
 
 block_t *split_block(block_t *to_split, size_t size)
 {
@@ -45,7 +44,7 @@ block_t *init_next(block_t *end, const size_t size)
     if (sbrk(((sizeof(block_t) + size) / getpagesize() + 1)
     * getpagesize()) == (void *) -1)
         return (NULL);
-    last_break = sbrk(0);
+    get_last_break(1, sbrk(0));
     end->next = new_ptr;
     end->next->free = false;
     end->next->size = size;
@@ -61,13 +60,13 @@ void *create_new_block(size_t const size)
     block_t *end = get_end();
     void *new_ptr;
 
-    if (last_break != sbrk(0))
+    if (get_last_break(0, NULL) != sbrk(0))
         return (init_next(end, size));
     if (end->adresse + end->size + sizeof(block_t) + size >= sbrk(0)) {
         if (sbrk(((sizeof(block_t) + size) / getpagesize() + 1)
         * getpagesize()) == (void *) -1)
             return (NULL);
-        last_break = sbrk(0);
+        get_last_break(1, sbrk(0));
     }
     end->next = end->adresse + end->size;
     end->next->free = false;
@@ -87,7 +86,7 @@ block_t *start_mem(size_t const size)
 
     if (new_ptr == (void *) -1)
         return (NULL);
-    last_break = sbrk(0);
+    get_last_break(1, sbrk(0));
     new_mem = new_ptr;
     new_mem->size = size;
     new_mem->free = false;

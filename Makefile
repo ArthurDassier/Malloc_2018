@@ -32,6 +32,7 @@ EXE	=	$(SRC_DIR)/main.c		\
 		$(SRC_DIR)/algo.c		\
 		$(SRC_DIR)/tools.c		\
 		$(SRC_DIR)/interface.c	\
+		$(SRC_DIR)/getter.c	\
 
 OBJ	=	$(EXE:.c=.o)
 
@@ -44,6 +45,7 @@ UT2	=	$(SRC_DIR)/main.c		\
 		$(SRC_DIR)/alloc.c		\
 		$(SRC_DIR)/algo.c		\
 		$(SRC_DIR)/tools.c		\
+		$(SRC_DIR)/getter.c		\
 
 RM	=	rm -f
 
