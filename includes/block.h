@@ -27,6 +27,7 @@ block_t* compare_ptr(void *ptr);
 block_t *fusion(block_t *to_fusion);
 void *free_and_return_null(void *ptr);
 void *unlock_thread_and_return_ptr(void *ptr);
+block_t *get_end();
 
 void *my_realloc(void *ptr, size_t size);
 void my_free(void *ptr);

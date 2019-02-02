@@ -7,6 +7,11 @@
 
 #include "block.h"
 
+void get_last_block()
+{
+    
+}
+
 void free(void *ptr)
 {
     return (my_free(ptr));

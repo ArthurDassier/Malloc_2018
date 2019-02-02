@@ -15,11 +15,7 @@ void my_free(void *ptr)
         return;
     block_t* to_free = compare_ptr(ptr);
     if (to_free != NULL) {
-        pthread_mutex_lock(&mutex_stock);
         to_free->free = true;
-        if (to_free->prev != NULL && to_free->prev->free == true)
-            to_free = fusion(to_free->prev);
-        pthread_mutex_unlock(&mutex_stock);
     }
 }
 
@@ -58,8 +54,6 @@ void *my_malloc(size_t size)
 {
     block_t *new_block = NULL;
     size = align4(size);
-
-
 
     if (size > MAX_MALLOC)
         return (NULL);
